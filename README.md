@@ -57,7 +57,7 @@ The migration API will likely differ from Sequel substantially. The primary moti
 For instance, adding an `age` column to the users table might look like:
 
 ```ruby
-table(:users).add_column(:age, :integer, null: false)
+table(:users).add_column(:age).opts(:integer, null: false)
 ```
 
 And rather than spitting out a preliminary migration file that then has to be edited just prior to release, we can provide hooks to the developer as such:
