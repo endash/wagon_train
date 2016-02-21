@@ -31,3 +31,41 @@ I don't know if there's a use-case for migrations with non-SQL-based databases, 
 
 Schema management is primarily via the `wagon` binary. Right now the only command is `release`, which is hardcoded to assume day-to-day work is done on a `develop` branch, and production releases are committed to the `master` branch. In a release version of Wagon Train this will be configurable, as well as have the option of using tags, etc, rather than specific branches. The release command also just generates an automatic migration as a diff between the current and previous schemas, without any allowance for customizing the migration. This is obviously not intended to be the final behaviour.
 
+## Schema Example
+
+Currently the schema API is based on Sequel, but is not identical. The CLI assumes a `schema.rb` file in the project root. An example `schema.rb`:
+
+```ruby
+WagonTrain::DSL::Schema.load do |db|
+  db.table(:users) do |t|
+    t.uuid :id, primary_key: true
+    t.column :name, String, null: false
+    t.date :birthday, null: false
+  end
+
+  db.table(:posts) do |t|
+    t.uuid :id, primary_key: true
+    t.text :title, null: false
+    t.text :body, null: false
+    t.uuid :user_id, foreign_key: :users
+  end
+end
+```
+
+The migration API will likely differ from Sequel substantially. The primary motivation there is to have a readable API that can double as clear identifiers for use with migration hooks, to provide a mechanism for customizing the migration without needing to generate the entire migration as an editable file.
+
+For instance, adding an `age` column to the users table might look like:
+
+```ruby
+table(:users).add_column(:age, :integer, null: false)
+```
+
+And rather than spitting out a preliminary migration file that then has to be edited just prior to release, we can provide hooks to the developer as such:
+
+```ruby
+after(table(:users).add_column(:age)) do
+  # ... sql to set the age columns based on the birth date
+end
+```
+
+This is 100% subject to change
