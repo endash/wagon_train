@@ -1,0 +1,6 @@
+require 'wagon_train/migration/generation/migration_generator'
+require 'wagon_train/migration/generation/tokens_generator'
+require 'wagon_train/migration/operations'
+require 'wagon_train/migration/operation_collector'
+require 'wagon_train/migration/migration'
+require 'wagon_train/migration/runner'

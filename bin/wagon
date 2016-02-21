@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "wagon_train/cli/cli"
+
+WagonTrain::CLI::CLI.start(ARGV)
