@@ -35,6 +35,9 @@ module WagonTrain
             add_table.definition.columns.each do |column|
               string << "t.#{column.type} :#{column.name}"
             end
+            add_table.definition.constraints.each do |constraint|
+              string << "t.constraint *Marshal.load(#{Marshal.dump(constraint)})"
+            end
           end
         end
 

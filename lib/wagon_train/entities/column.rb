@@ -1,5 +1,7 @@
 module WagonTrain
   class Column
+    include Dry::Equalizer(:name, :type, :default, :null, :primary_key, :unique)
+
     attr_reader :name, :type, :default, :null, :primary_key, :unique
 
     def options
@@ -18,15 +20,6 @@ module WagonTrain
       @null = options[:null]
       @primary_key = options[:primary_key]
       @unique = options[:unique]
-    end
-
-    def ==(other_column)
-      name == other_column.name &&
-      type == other_column.type &&
-      default == other_column.default &&
-      null == other_column.null &&
-      primary_key == other_column.primary_key &&
-      unique == other_column.unique
     end
 
     def -(other_column)

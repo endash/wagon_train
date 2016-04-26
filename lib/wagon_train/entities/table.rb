@@ -1,21 +1,18 @@
 module WagonTrain
   class Table
     include Visitable
+    include Dry::Equalizer(:name, :columns, :constraints)
 
-    attr_reader :name, :columns
+    attr_reader :name, :columns, :constraints
 
-    def initialize(name, columns)
+    def initialize(name, columns=[], constraints=[])
       @name = name
-      @columns = columns
+      @columns = Set.new(columns)
+      @constraints = Set.new(constraints)
     end
 
     def column(name)
       @columns.find { |c| c.name == name }
-    end
-
-    def ==(other_table)
-      name == other_table.name &&
-      columns.sort_by { |c| c.name } == other_table.columns.sort_by { |c| c.name }
     end
 
     def column_names

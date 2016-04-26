@@ -22,6 +22,9 @@ module WagonTrain
           create_table.columns.each do |c|
             column c.name, c.type, c.options
           end
+          create_table.constraints.each do |c|
+            constraint *c
+          end
         end
       end
     end

@@ -22,12 +22,12 @@ class SequenSchemaLoaderTest < Minitest::Test
   end
 
   def simple_schema
-    WagonTrain::DSL::Schema.load do |db|
+    WagonTrain::DSL::Schema.new do |db|
       db.table(:users) do |t|
         t.uuid :id, null: false, default: "", primary_key: true
         t.string :name, null: false, default: "", primary_key: false
       end
-    end
+    end.schema
   end
 
   def simple_fake_database

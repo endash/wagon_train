@@ -1,4 +1,4 @@
-require 'wagon_train/difference/differ'
+require 'wagon_train/utils/differ'
 
 module WagonTrain
   SchemaDifference = Struct.new(:value, :previous_value, :tables, :enum_types) { include Visitable }
@@ -8,19 +8,19 @@ module WagonTrain
 
   class Schema
     class << self
-      define_method(:diff, &WagonTrain.differ(SchemaDifference, [[:tables, :name], [:enum_types, :name]]))
+      define_method(:diff, &WagonTrain.differ(SchemaDifference, tables: :name, enum_types: :name))
     end
   end
 
   class Table
     class << self
-      define_method(:diff, &WagonTrain.differ(TableDifference, [[:columns, :name]]))
+      define_method(:diff, &WagonTrain.differ(TableDifference, columns: :name))
     end
   end
 
   class EnumType
     class << self
-      define_method(:diff, &WagonTrain.differ(EnumTypeDifference, [:values]))
+      define_method(:diff, &WagonTrain.differ(EnumTypeDifference, :values))
     end
   end
 end

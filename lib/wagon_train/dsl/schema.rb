@@ -1,13 +1,11 @@
+require 'set'
+
 module WagonTrain
   module DSL
     class Schema
-      def self.load(&block)
-        new(&block).schema
-      end
-
       def initialize(&block)
-        @tables = []
-        @enum_types = []
+        @tables = Set.new
+        @enum_types = Set.new
         block.call(self) if block
       end
 
@@ -21,6 +19,16 @@ module WagonTrain
 
       def enum_type(name, values)
         @enum_types << EnumType.new(name, values)
+      end
+
+      def extension(*args)
+      end
+
+      def function(*args)
+      end
+
+      def lit(*args)
+        WagonTrain.lit(*args)
       end
     end
   end

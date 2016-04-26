@@ -1,12 +1,19 @@
+require 'set'
+
 module WagonTrain
   class Schema
     include Visitable
+    include Dry::Equalizer(:tables, :enum_types)
+
+    def self.load(&block)
+      DSL::Schema.new(&block).schema
+    end
 
     attr_reader :tables, :enum_types
 
     def initialize(tables=[], enum_types=[])
-      @tables = tables
-      @enum_types = enum_types
+      @tables = Set.new(tables)
+      @enum_types = Set.new(enum_types)
     end
 
     def table(name)
@@ -15,11 +22,6 @@ module WagonTrain
 
     def enum_type(name)
       @enum_types.find { |e| e.name == name }
-    end
-
-    def ==(other_schema)
-      tables.sort_by { |t| t.name } == other_schema.tables.sort_by { |t| t.name } &&
-      enum_types.sort_by { |e| e.name } == other_schema.enum_types.sort_by { |e| e.name }
     end
 
     def table_names

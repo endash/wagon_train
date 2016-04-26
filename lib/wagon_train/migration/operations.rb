@@ -5,6 +5,8 @@ module WagonTrain
     end
 
     class AddTable < Operation
+      include Dry::Equalizer(:definition)
+
       attr_reader :definition
 
       def initialize(definition)
@@ -19,24 +21,24 @@ module WagonTrain
         @definition.columns
       end
 
-      def ==(other_op)
-        definition == other_op.definition
+      def constraints
+        @definition.constraints
       end
     end
 
     class RemoveTable < Operation
+      include Dry::Equalizer(:name)
+
       attr_reader :name
 
       def initialize(name)
         @name = name
       end
-
-      def ==(other_op)
-        name == other_op.name
-      end
     end
 
     class AddColumn < Operation
+      include Dry::Equalizer(:table, :definition)
+
       attr_reader :table, :definition
 
       def initialize(table, definition)
@@ -51,23 +53,15 @@ module WagonTrain
       def type
         @definition.type
       end
-
-      def ==(other_op)
-        table == other_op.table &&
-        definition == other_op.definition
-      end
     end
 
     class RemoveColumn < Operation
+      include Dry::Equalizer(:table, :name)
+
       attr_reader :table, :name
       def initialize(table, name)
         @table = table
         @name = name
-      end
-
-      def ==(other_op)
-        table == other_op.table &&
-        name == other_op.name
       end
     end
 

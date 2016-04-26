@@ -2,6 +2,7 @@ module WagonTrain
   DifferenceSet = Struct.new(:added, :removed, :common, :changed)
 
   def self.differ(struct, keys)
+    keys = Array(keys)
     Proc.new do |old_value, new_value|
       diff_sets = keys.map do |key|
         if key.is_a?(Array)
